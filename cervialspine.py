@@ -69,7 +69,7 @@ class CustomConfig(Config):
     IMAGES_PER_GPU = 1
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + beagle
+    NUM_CLASSES = 1 + 7  # Background + beagle
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
@@ -91,6 +91,12 @@ class CustomDataset(utils.Dataset):
         """
         # Add classes. We have only one class to add.
         self.add_class("Cervial spine", 1, "c1")
+        self.add_class("Cervial spine", 2, "c2")
+        self.add_class("Cervial spine", 3, "c3")
+        self.add_class("Cervial spine", 4, "c4")
+        self.add_class("Cervial spine", 5, "c5")
+        self.add_class("Cervial spine", 6, "c6")
+        self.add_class("Cervial spine", 7, "c7")
 
         # Train or validation dataset?
         assert subset in ["train", "val"]
@@ -150,7 +156,7 @@ class CustomDataset(utils.Dataset):
         """
         # If not a beagle dataset image, delegate to parent class.
         image_info = self.image_info[image_id]
-        if image_info["source"] != "beagle":
+        if image_info["source"] != "Cervial spine":
             return super(self.__class__, self).load_mask(image_id)
 
         # Convert polygons to a bitmap mask of shape
@@ -170,7 +176,7 @@ class CustomDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the path of the image."""
         info = self.image_info[image_id]
-        if info["source"] == "c1":
+        if info["source"] == "Cervial spine":
             return info["path"]
         else:
             super(self.__class__, self).image_reference(image_id)
@@ -195,7 +201,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=10,
+                epochs=2,
                 layers='heads')
 
 
